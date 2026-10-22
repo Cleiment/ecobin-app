@@ -1,0 +1,21 @@
+{
+  "name": "ecobin-app",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Aplikasi web EcoBin untuk Pengguna dan Admin (prototipe tugas E-Bisnis)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning server.js",
+    "dev": "node --disable-warning=ExperimentalWarning --watch server.js",
+    "reset-db": "node --disable-warning=ExperimentalWarning db/seed.js --reset"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "dependencies": {
+    "ejs": "^7.0.2",
+    "express": "^5.3.0",
+    "jsqr": "^1.4.0",
+    "qrcode": "^1.5.4"
+  }
+}

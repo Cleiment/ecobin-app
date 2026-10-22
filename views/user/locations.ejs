@@ -1,0 +1,30 @@
+<a class="back-link" href="/app">
+  <svg class="icon" aria-hidden="true"><use href="#i-prev"/></svg> Beranda
+</a>
+<h1 class="u-title">Lokasi EcoBin</h1>
+<p class="u-lead">Stasiun EcoBin di Pontianak. Kalau unit hampir penuh, coba setor di lokasi lain.</p>
+
+<ul class="location-list">
+  <% locations.forEach((l) => { const fill = fmt.fill(l); %>
+    <li class="location">
+      <div class="location-head">
+        <span class="retailer"><%= l.retailer %></span>
+        <% if (l.status === 'aktif') { %>
+          <span class="badge badge--ok">Aktif</span>
+        <% } else { %>
+          <span class="badge badge--soon">Segera hadir</span>
+        <% } %>
+      </div>
+      <p class="location-name"><%= l.name %></p>
+      <p class="location-address"><%= l.address %></p>
+      <% if (l.status === 'aktif') { %>
+        <div class="fill fill--<%= fill.tone %>">
+          <div class="fill-bar" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="<%= fill.bar %>" aria-label="Isi unit">
+            <span style="width: <%= fill.bar %>%"></span>
+          </div>
+          <p class="fill-label"><%= fill.label %> · <%= fill.pct %>%</p>
+        </div>
+      <% } %>
+    </li>
+  <% }) %>
+</ul>

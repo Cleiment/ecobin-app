@@ -1,0 +1,37 @@
+<div class="items">
+  <h3 class="items-title">Contoh barang</h3>
+  <% if (!items.length) { %>
+    <p class="panel-empty">Belum ada contoh barang.</p>
+  <% } else { %>
+    <ul class="item-list">
+      <% items.forEach((i) => { %>
+        <li>
+          <span class="item-name"><%= i.name %></span>
+          <span class="item-range"><%= fmt.number(i.min_kg) %>–<%= fmt.number(i.max_kg) %> kg/buah</span>
+          <form method="post" action="/admin/barang/<%= i.id %>/hapus" data-confirm="Hapus barang <%= i.name %>?">
+            <button class="icon-btn icon-btn--sm" type="submit">
+              <svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>
+              <span class="visually-hidden">Hapus <%= i.name %></span>
+            </button>
+          </form>
+        </li>
+      <% }) %>
+    </ul>
+  <% } %>
+  <form class="form-inline form-inline--compact" method="post" action="/admin/barang">
+    <input type="hidden" name="category_id" value="<%= categoryId %>">
+    <div class="field">
+      <label for="item-name-<%= categoryId || 'mix' %>">Barang baru</label>
+      <input id="item-name-<%= categoryId || 'mix' %>" name="name" type="text" placeholder="mis. Botol kaca" required>
+    </div>
+    <div class="field field--xs">
+      <label for="item-min-<%= categoryId || 'mix' %>">Min (kg)</label>
+      <input id="item-min-<%= categoryId || 'mix' %>" name="min_kg" type="number" min="0.001" step="0.001" required>
+    </div>
+    <div class="field field--xs">
+      <label for="item-max-<%= categoryId || 'mix' %>">Maks (kg)</label>
+      <input id="item-max-<%= categoryId || 'mix' %>" name="max_kg" type="number" min="0.001" step="0.001" required>
+    </div>
+    <button class="btn btn--outline" type="submit">Tambah barang</button>
+  </form>
+</div>

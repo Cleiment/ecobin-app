@@ -1,0 +1,103 @@
+<%
+  const rejectRate = kpi.deposits ? Math.round((kpi.rejected / kpi.deposits) * 100) : 0;
+  const maxCat = Math.max(...byCategory.map((c) => c.kg), 0.001);
+  const maxLoc = Math.max(...byLocation.map((l) => l.kg), 0.001);
+%>
+<header class="page-head">
+  <div>
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-lead">Ringkasan setoran dan kondisi unit EcoBin di Pontianak.</p>
+  </div>
+  <a class="btn btn--primary" href="/admin/stasiun">
+    <svg class="icon" aria-hidden="true"><use href="#i-monitor"/></svg> Buka simulator
+  </a>
+</header>
+
+<dl class="kpi-grid">
+  <div class="kpi">
+    <dt>Sampah terpilah</dt>
+    <dd><%= fmt.kg(kpi.total_kg) %></dd>
+    <p>dari setoran yang diterima</p>
+  </div>
+  <div class="kpi">
+    <dt>Setoran</dt>
+    <dd><%= fmt.number(kpi.deposits) %></dd>
+    <p><%= rejectRate %>% ditolak (<%= fmt.number(kpi.rejected) %>)</p>
+  </div>
+  <div class="kpi">
+    <dt>Pengguna aktif</dt>
+    <dd><%= fmt.number(kpi.active_users) %></dd>
+    <p>setor dalam 30 hari, dari <%= fmt.number(kpi.users) %> terdaftar</p>
+  </div>
+  <div class="kpi">
+    <dt>Voucher ditukar</dt>
+    <dd><%= fmt.number(kpi.redemptions) %></dd>
+    <p><a href="/admin/penukaran">Lihat penukaran</a></p>
+  </div>
+</dl>
+
+<div class="dash-grid">
+  <section class="panel" aria-labelledby="unit-title">
+    <div class="panel-head">
+      <h2 class="panel-title" id="unit-title">Unit hampir penuh</h2>
+      <a class="link-more" href="/admin/lokasi">Semua unit</a>
+    </div>
+    <% if (!nearlyFull.length) { %>
+      <p class="panel-empty">Semua unit masih di bawah 80% kapasitas.</p>
+    <% } else { %>
+      <ul class="unit-list">
+        <% nearlyFull.forEach((l) => { const fill = fmt.fill(l); %>
+          <li class="unit-row">
+            <div class="unit-info">
+              <p class="unit-name"><%= l.name %></p>
+              <div class="fill fill--<%= fill.tone %>">
+                <div class="fill-bar" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="<%= fill.bar %>" aria-label="Isi <%= l.name %>"><span style="width: <%= fill.bar %>%"></span></div>
+                <p class="fill-label"><%= fmt.kg(l.current_kg) %> dari <%= fmt.kg(l.capacity_kg) %> · <%= fill.pct %>%</p>
+              </div>
+            </div>
+            <form method="post" action="/admin/lokasi/<%= l.id %>/kosongkan" data-confirm="Tandai <%= l.name %> sudah dikosongkan? Isi unit kembali ke 0 kg.">
+              <input type="hidden" name="back" value="dashboard">
+              <button class="btn btn--outline btn--sm" type="submit">
+                <svg class="icon" aria-hidden="true"><use href="#i-truck"/></svg> Tandai dikosongkan
+              </button>
+            </form>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+  </section>
+
+  <section class="panel" aria-labelledby="cat-title">
+    <h2 class="panel-title" id="cat-title">Sampah per kategori</h2>
+    <ul class="bars">
+      <% byCategory.forEach((c) => { %>
+        <li class="bar-row">
+          <span class="bar-label"><%= c.name %></span>
+          <span class="bar-track"><span class="bar-fill" style="width: <%= Math.round(c.kg / maxCat * 100) %>%; --bar: <%= c.color %>"></span></span>
+          <span class="bar-value"><%= fmt.kg(c.kg) %></span>
+        </li>
+      <% }) %>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="loc-title">
+    <h2 class="panel-title" id="loc-title">Sampah per lokasi</h2>
+    <ul class="bars">
+      <% byLocation.forEach((l) => { %>
+        <li class="bar-row">
+          <span class="bar-label"><%= l.name %></span>
+          <span class="bar-track"><span class="bar-fill" style="width: <%= Math.round(l.kg / maxLoc * 100) %>%"></span></span>
+          <span class="bar-value"><%= fmt.kg(l.kg) %></span>
+        </li>
+      <% }) %>
+    </ul>
+  </section>
+
+  <section class="panel panel--wide" aria-labelledby="recent-title">
+    <div class="panel-head">
+      <h2 class="panel-title" id="recent-title">Setoran terbaru</h2>
+      <a class="link-more" href="/admin/setoran">Semua setoran</a>
+    </div>
+    <%- include('_deposit-table', { deposits: recent, showUser: true }) %>
+  </section>
+</div>

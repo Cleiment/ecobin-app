@@ -1,0 +1,17 @@
+<li class="deposit<%= d.status === 'ditolak' ? ' deposit--rejected' : '' %>">
+  <span class="deposit-dot" style="--cat: <%= d.category_color %>" aria-hidden="true"></span>
+  <div class="deposit-main">
+    <p class="deposit-title"><%= d.item_name %><% if (d.status === 'diterima' && d.quantity > 1) { %> <span class="muted">× <%= d.quantity %></span><% } %></p>
+    <p class="deposit-meta"><%= d.status === 'ditolak' ? 'Lubang ' + d.category_name : d.category_name %> · <%= d.location_name %></p>
+    <p class="deposit-meta"><%= fmt.dateTime(d.created_at) %></p>
+    <% if (d.status === 'ditolak') { %><p class="deposit-reason"><%= d.reason %></p><% } %>
+  </div>
+  <div class="deposit-side">
+    <% if (d.status === 'diterima') { %>
+      <span class="deposit-points">+<%= fmt.number(d.points) %></span>
+      <span class="deposit-weight"><%= fmt.kg(d.weight_kg) %></span>
+    <% } else { %>
+      <span class="badge badge--danger">Ditolak</span>
+    <% } %>
+  </div>
+</li>

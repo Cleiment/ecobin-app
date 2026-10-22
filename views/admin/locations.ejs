@@ -1,0 +1,105 @@
+<header class="page-head">
+  <div>
+    <h1 class="page-title">Lokasi dan Unit</h1>
+    <p class="page-lead">Pantau isi tiap unit dan tandai unit yang sudah dikosongkan armada.</p>
+  </div>
+</header>
+
+<section class="panel" aria-labelledby="new-loc">
+  <h2 class="panel-title" id="new-loc">Tambah lokasi</h2>
+  <form class="form-inline" method="post" action="/admin/lokasi">
+    <div class="field field--sm">
+      <label for="l-retailer">Gerai</label>
+      <select id="l-retailer" name="retailer">
+        <% retailers.forEach((r) => { %><option><%= r %></option><% }) %>
+      </select>
+    </div>
+    <div class="field">
+      <label for="l-name">Nama</label>
+      <input id="l-name" name="name" type="text" placeholder="mis. Indomaret Imam Bonjol" required>
+    </div>
+    <div class="field">
+      <label for="l-address">Alamat</label>
+      <input id="l-address" name="address" type="text" required>
+    </div>
+    <div class="field field--sm">
+      <label for="l-status">Status</label>
+      <select id="l-status" name="status">
+        <option value="aktif">Aktif</option>
+        <option value="segera">Segera hadir</option>
+      </select>
+    </div>
+    <div class="field field--xs">
+      <label for="l-cap">Kapasitas (kg)</label>
+      <input id="l-cap" name="capacity_kg" type="number" min="1" step="0.1" value="150" required>
+    </div>
+    <button class="btn btn--primary" type="submit"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg> Tambah</button>
+  </form>
+</section>
+
+<ul class="loc-grid">
+  <% locations.forEach((l) => { const fill = fmt.fill(l); %>
+    <li class="panel loc-card<%= l.active ? '' : ' is-inactive' %>">
+      <div class="loc-head">
+        <span class="retailer"><%= l.retailer %></span>
+        <% if (!l.active) { %>
+          <span class="badge badge--muted">Nonaktif</span>
+        <% } else if (l.status === 'aktif') { %>
+          <span class="badge badge--ok">Aktif</span>
+        <% } else { %>
+          <span class="badge badge--soon">Segera hadir</span>
+        <% } %>
+      </div>
+      <h2 class="loc-name"><%= l.name %></h2>
+      <p class="loc-address"><%= l.address %></p>
+      <div class="fill fill--<%= fill.tone %>">
+        <div class="fill-bar" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="<%= fill.bar %>" aria-label="Isi <%= l.name %>"><span style="width: <%= fill.bar %>%"></span></div>
+        <p class="fill-label"><%= fill.label %> · <%= fmt.kg(l.current_kg) %> dari <%= fmt.kg(l.capacity_kg) %> (<%= fill.pct %>%)</p>
+      </div>
+      <p class="panel-meta">
+        <%= fmt.number(l.used) %> setoran ·
+        <%= l.last_pickup ? 'terakhir dikosongkan ' + fmt.dateTime(l.last_pickup) : 'belum pernah dikosongkan' %>
+      </p>
+      <form method="post" action="/admin/lokasi/<%= l.id %>/kosongkan" data-confirm="Tandai <%= l.name %> sudah dikosongkan? Isi unit kembali ke 0 kg.">
+        <button class="btn btn--outline btn--sm" type="submit"<%= l.current_kg > 0 ? '' : ' disabled' %>>
+          <svg class="icon" aria-hidden="true"><use href="#i-truck"/></svg> Tandai sudah dikosongkan
+        </button>
+      </form>
+      <details class="edit">
+        <summary>Ubah lokasi</summary>
+        <form class="form-stack" method="post" action="/admin/lokasi/<%= l.id %>">
+          <div class="field">
+            <label for="lr-<%= l.id %>">Gerai</label>
+            <select id="lr-<%= l.id %>" name="retailer">
+              <% retailers.forEach((r) => { %><option<%= r === l.retailer ? ' selected' : '' %>><%= r %></option><% }) %>
+            </select>
+          </div>
+          <div class="field">
+            <label for="ln-<%= l.id %>">Nama</label>
+            <input id="ln-<%= l.id %>" name="name" type="text" value="<%= l.name %>" required>
+          </div>
+          <div class="field">
+            <label for="la-<%= l.id %>">Alamat</label>
+            <input id="la-<%= l.id %>" name="address" type="text" value="<%= l.address %>" required>
+          </div>
+          <div class="field">
+            <label for="ls-<%= l.id %>">Status</label>
+            <select id="ls-<%= l.id %>" name="status">
+              <option value="aktif"<%= l.status === 'aktif' ? ' selected' : '' %>>Aktif</option>
+              <option value="segera"<%= l.status === 'segera' ? ' selected' : '' %>>Segera hadir</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="lc-<%= l.id %>">Kapasitas (kg)</label>
+            <input id="lc-<%= l.id %>" name="capacity_kg" type="number" min="1" step="0.1" value="<%= l.capacity_kg %>" required>
+          </div>
+          <label class="check"><input type="checkbox" name="active" value="1"<%= l.active ? ' checked' : '' %>> Tampilkan di aplikasi</label>
+          <button class="btn btn--primary" type="submit">Simpan</button>
+        </form>
+        <form method="post" action="/admin/lokasi/<%= l.id %>/hapus" data-confirm="Hapus <%= l.name %>?">
+          <button class="btn btn--danger-ghost btn--sm" type="submit"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg> Hapus lokasi</button>
+        </form>
+      </details>
+    </li>
+  <% }) %>
+</ul>

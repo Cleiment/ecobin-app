@@ -1,0 +1,30 @@
+<h1 class="u-title">Riwayat Setoran</h1>
+
+<dl class="summary">
+  <div><dt>Sampah terpilah</dt><dd><%= fmt.kg(summary.kg) %></dd></div>
+  <div><dt>Eco Point didapat</dt><dd><%= fmt.number(summary.points) %></dd></div>
+  <div><dt>Ditolak</dt><dd><%= fmt.number(summary.rejected || 0) %>×</dd></div>
+</dl>
+
+<% if (!deposits.length) { %>
+  <div class="empty">
+    <span class="empty-icon"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg></span>
+    <p class="empty-title">Belum ada riwayat</p>
+    <p>Setiap setoran di stasiun EcoBin, diterima atau ditolak, akan tercatat di sini.</p>
+    <a class="btn btn--outline btn--sm" href="/app/qr">Buka QR membership</a>
+  </div>
+<% } else {
+  let lastMonth = null;
+%>
+  <% deposits.forEach((d) => {
+    const month = new Date(d.created_at.replace(' ', 'T') + 'Z').toLocaleDateString('id-ID', { month: 'long', year: 'numeric', timeZone: 'Asia/Pontianak' });
+    if (month !== lastMonth) {
+      if (lastMonth !== null) { %></ul><% }
+      lastMonth = month; %>
+      <h2 class="month-title"><%= month %></h2>
+      <ul class="deposit-list">
+    <% } %>
+    <%- include('_deposit', { d }) %>
+  <% }) %>
+  </ul>
+<% } %>

@@ -1,0 +1,61 @@
+<%
+  const tabs = [["", "Semua"], ["aktif", "Aktif"], ["dipakai", "Sudah dipakai"], ["kedaluwarsa", "Kedaluwarsa"]];
+%>
+<header class="page-head">
+  <div>
+    <h1 class="page-title">Penukaran Voucher</h1>
+    <p class="page-lead">Voucher yang ditukar pengguna. Tandai "sudah dipakai" setelah kode ditunjukkan ke kasir.</p>
+  </div>
+</header>
+
+<nav class="chip-row" aria-label="Saring status">
+  <% tabs.forEach(([value, label]) => { %>
+    <a class="chip" href="/admin/penukaran<%= value ? '?status=' + value : '' %>"<% if (status === value) { %> aria-current="page"<% } %>><%= label %></a>
+  <% }) %>
+</nav>
+
+<section class="panel">
+  <% if (!redemptions.length) { %>
+    <p class="panel-empty">Tidak ada penukaran dengan status ini.</p>
+  <% } else { %>
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Ditukar</th>
+            <th scope="col">Kode</th>
+            <th scope="col">Pengguna</th>
+            <th scope="col">Voucher</th>
+            <th scope="col" class="num">Poin</th>
+            <th scope="col">Status</th>
+            <th scope="col"><span class="visually-hidden">Aksi</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% redemptions.forEach((r) => { const s = fmt.redemptionStatus(r); %>
+            <tr>
+              <td class="nowrap"><%= fmt.dateTime(r.created_at) %></td>
+              <td class="nowrap code"><%= r.code %></td>
+              <td><a href="/admin/pengguna/<%= r.uid %>"><%= r.user_name %></a></td>
+              <td><%= r.voucher_name %></td>
+              <td class="num"><%= fmt.number(r.points_spent) %></td>
+              <td>
+                <span class="badge badge--<%= s.tone %>"><%= s.label %></span>
+                <p class="table-note">
+                  <%= r.status === 'dipakai' ? fmt.dateTime(r.used_at) : 'sampai ' + fmt.date(r.expires_at) %>
+                </p>
+              </td>
+              <td>
+                <% if (s.label === 'Aktif') { %>
+                  <form method="post" action="/admin/penukaran/<%= r.id %>/pakai" data-confirm="Tandai voucher <%= r.code %> sudah dipakai di kasir?">
+                    <button class="btn btn--outline btn--sm" type="submit">Tandai dipakai</button>
+                  </form>
+                <% } %>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>

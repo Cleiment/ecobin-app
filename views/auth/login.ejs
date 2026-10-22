@@ -1,0 +1,25 @@
+<section class="auth-card">
+  <h1 class="auth-title">Masuk ke EcoBin</h1>
+  <p class="auth-lead">Lihat Eco Point, QR membership, dan riwayat setoranmu.</p>
+
+  <% if (error) { %>
+    <div class="alert alert--error" role="alert">
+      <svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>
+      <p><%= error %></p>
+    </div>
+  <% } %>
+
+  <form class="form-stack" method="post" action="/masuk">
+    <div class="field">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" autocomplete="email" value="<%= values.email || '' %>" required autofocus>
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required>
+    </div>
+    <button class="btn btn--primary btn--block" type="submit">Masuk</button>
+  </form>
+
+  <p class="auth-switch">Belum punya akun? <a href="/daftar">Daftar sekarang</a></p>
+</section>

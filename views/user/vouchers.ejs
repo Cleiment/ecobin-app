@@ -1,0 +1,34 @@
+<a class="back-link" href="/app/reward">
+  <svg class="icon" aria-hidden="true"><use href="#i-prev"/></svg> Reward
+</a>
+<h1 class="u-title">Voucher Milikku</h1>
+
+<% if (!redemptions.length) { %>
+  <div class="empty">
+    <span class="empty-icon"><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg></span>
+    <p class="empty-title">Belum ada voucher</p>
+    <p>Tukarkan Eco Point-mu di halaman Reward. Voucher yang kamu tukar akan muncul di sini.</p>
+    <a class="btn btn--outline btn--sm" href="/app/reward">Lihat reward</a>
+  </div>
+<% } else { %>
+  <ul class="owned-list">
+    <% redemptions.forEach((r) => { const status = fmt.redemptionStatus(r); %>
+      <li class="owned<%= status.tone === 'muted' ? ' owned--muted' : '' %>">
+        <div class="owned-head">
+          <span class="retailer"><%= r.retailer %></span>
+          <span class="badge badge--<%= status.tone %>"><%= status.label %></span>
+        </div>
+        <p class="owned-name"><%= r.voucher_name %></p>
+        <p class="owned-code" aria-label="Kode voucher <%= r.code.split('').join(' ') %>"><%= r.code %></p>
+        <p class="owned-meta">
+          <% if (r.status === 'dipakai') { %>
+            Dipakai <%= fmt.dateTime(r.used_at) %>
+          <% } else { %>
+            Berlaku sampai <%= fmt.date(r.expires_at) %>
+          <% } %>
+        </p>
+        <% if (status.label === 'Aktif') { %><p class="owned-hint">Tunjukkan kode ini ke kasir <%= r.retailer %>.</p><% } %>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>

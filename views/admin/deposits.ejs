@@ -1,0 +1,53 @@
+<header class="page-head">
+  <div>
+    <h1 class="page-title">Riwayat Setoran</h1>
+    <p class="page-lead">Semua setoran dari Simulator Stasiun, diterima maupun ditolak.</p>
+  </div>
+</header>
+
+<section class="panel">
+  <form class="form-inline filters" method="get" action="/admin/setoran">
+    <div class="field field--sm">
+      <label for="f-lokasi">Lokasi</label>
+      <select id="f-lokasi" name="lokasi">
+        <option value="">Semua lokasi</option>
+        <% locations.forEach((l) => { %><option value="<%= l.id %>"<%= String(l.id) === filters.lokasi ? ' selected' : '' %>><%= l.name %></option><% }) %>
+      </select>
+    </div>
+    <div class="field field--sm">
+      <label for="f-kategori">Kategori</label>
+      <select id="f-kategori" name="kategori">
+        <option value="">Semua kategori</option>
+        <% categories.forEach((c) => { %><option value="<%= c.id %>"<%= String(c.id) === filters.kategori ? ' selected' : '' %>><%= c.name %></option><% }) %>
+      </select>
+    </div>
+    <div class="field field--sm">
+      <label for="f-status">Status</label>
+      <select id="f-status" name="status">
+        <option value="">Semua status</option>
+        <option value="diterima"<%= filters.status === 'diterima' ? ' selected' : '' %>>Diterima</option>
+        <option value="ditolak"<%= filters.status === 'ditolak' ? ' selected' : '' %>>Ditolak</option>
+      </select>
+    </div>
+    <div class="field field--sm">
+      <label for="f-dari">Dari tanggal</label>
+      <input id="f-dari" name="dari" type="date" value="<%= filters.dari %>">
+    </div>
+    <div class="field field--sm">
+      <label for="f-sampai">Sampai tanggal</label>
+      <input id="f-sampai" name="sampai" type="date" value="<%= filters.sampai %>">
+    </div>
+    <button class="btn btn--primary" type="submit">Terapkan</button>
+    <a class="btn btn--ghost" href="/admin/setoran">Reset</a>
+  </form>
+
+  <p class="filter-summary">
+    <strong><%= fmt.number(summary.n) %></strong> setoran ·
+    <strong><%= fmt.kg(summary.kg) %></strong> diterima ·
+    <strong><%= fmt.number(summary.points) %></strong> poin ·
+    <strong><%= fmt.number(summary.rejected || 0) %></strong> ditolak
+    <% if (summary.n > deposits.length) { %>· menampilkan <%= deposits.length %> terbaru<% } %>
+  </p>
+
+  <%- include('_deposit-table', { deposits, showUser: true }) %>
+</section>

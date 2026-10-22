@@ -1,0 +1,49 @@
+<header class="page-head">
+  <div>
+    <h1 class="page-title">Pengguna</h1>
+    <p class="page-lead"><%= fmt.number(users.length) %> pengguna<%= q ? ' cocok dengan "' + q + '"' : ' terdaftar' %>.</p>
+  </div>
+  <form class="search" method="get" action="/admin/pengguna" role="search">
+    <label class="visually-hidden" for="q">Cari pengguna</label>
+    <input id="q" name="q" type="search" value="<%= q %>" placeholder="Cari nama, email, atau kode member">
+    <button class="btn btn--outline" type="submit">Cari</button>
+  </form>
+</header>
+
+<section class="panel">
+  <% if (!users.length) { %>
+    <p class="panel-empty">Tidak ada pengguna yang cocok. Coba kata kunci lain.</p>
+  <% } else { %>
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Nama</th>
+            <th scope="col">Kode member</th>
+            <th scope="col" class="num">Eco Point</th>
+            <th scope="col" class="num">Setoran</th>
+            <th scope="col" class="num">Sampah terpilah</th>
+            <th scope="col">Setoran terakhir</th>
+            <th scope="col">Terdaftar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% users.forEach((u) => { %>
+            <tr>
+              <td>
+                <a class="strong-link" href="/admin/pengguna/<%= u.id %>"><%= u.name %></a>
+                <p class="table-note"><%= u.email %></p>
+              </td>
+              <td class="nowrap"><%= u.member_code %></td>
+              <td class="num"><%= fmt.number(u.points) %></td>
+              <td class="num"><%= fmt.number(u.deposits) %></td>
+              <td class="num nowrap"><%= fmt.kg(u.kg) %></td>
+              <td class="nowrap"><%= u.last_deposit ? fmt.date(u.last_deposit) : '–' %></td>
+              <td class="nowrap"><%= fmt.date(u.created_at) %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>

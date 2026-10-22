@@ -1,0 +1,54 @@
+<h1 class="u-hello">Halo, <%= fmt.firstName(currentUser.name) %></h1>
+
+<section class="points-card" aria-labelledby="points-label">
+  <p class="points-label" id="points-label">Eco Point kamu</p>
+  <p class="points-value"><%= fmt.number(currentUser.points) %> <span>poin</span></p>
+  <% if (cheapest) { %>
+    <% if (currentUser.points >= cheapest) { %>
+      <p class="points-note">Cukup untuk ditukar dengan voucher belanja.</p>
+      <a class="btn btn--primary btn--sm" href="/app/reward">Tukar poin</a>
+    <% } else { %>
+      <div class="progress" aria-hidden="true"><span style="width: <%= Math.round(currentUser.points / cheapest * 100) %>%"></span></div>
+      <p class="points-note">Kurang <%= fmt.number(cheapest - currentUser.points) %> poin lagi untuk voucher termurah.</p>
+    <% } %>
+  <% } %>
+  <dl class="points-stats">
+    <div><dt>Sampah terpilah</dt><dd><%= fmt.kg(totals.kg) %></dd></div>
+    <div><dt>Setoran diterima</dt><dd><%= fmt.number(totals.count) %>×</dd></div>
+  </dl>
+</section>
+
+<nav class="shortcuts" aria-label="Pintasan">
+  <a class="shortcut" href="/app/qr">
+    <span class="shortcut-icon"><svg class="icon" aria-hidden="true"><use href="#i-qr"/></svg></span>
+    QR Membership
+  </a>
+  <a class="shortcut" href="/app/voucher">
+    <span class="shortcut-icon"><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg></span>
+    Voucher Milikku
+    <% if (activeVouchers) { %><span class="badge badge--ok"><%= activeVouchers %> aktif</span><% } %>
+  </a>
+  <a class="shortcut" href="/app/lokasi">
+    <span class="shortcut-icon"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg></span>
+    Lokasi EcoBin
+  </a>
+</nav>
+
+<section class="u-section" aria-labelledby="recent-title">
+  <div class="u-section-head">
+    <h2 class="u-section-title" id="recent-title">Setoran terakhir</h2>
+    <% if (recent.length) { %><a class="link-more" href="/app/riwayat">Lihat semua</a><% } %>
+  </div>
+  <% if (recent.length) { %>
+    <ul class="deposit-list">
+      <% recent.forEach((d) => { %><%- include('_deposit', { d }) %><% }) %>
+    </ul>
+  <% } else { %>
+    <div class="empty">
+      <span class="empty-icon"><svg class="icon" aria-hidden="true"><use href="#i-bin"/></svg></span>
+      <p class="empty-title">Belum ada setoran</p>
+      <p>Pilah sampahmu, lalu scan QR membership di stasiun EcoBin terdekat.</p>
+      <a class="btn btn--outline btn--sm" href="/app/lokasi">Lihat lokasi</a>
+    </div>
+  <% } %>
+</section>

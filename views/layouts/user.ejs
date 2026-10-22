@@ -1,0 +1,45 @@
+<%
+  const tabs = [
+    { href: "/app", label: "Beranda", icon: "home", match: (p) => p === "/app" || p === "/app/" || p === "/app/lokasi" },
+    { href: "/app/riwayat", label: "Riwayat", icon: "clock", match: (p) => p.startsWith("/app/riwayat") },
+    { href: "/app/qr", label: "QR Saya", icon: "qr", match: (p) => p.startsWith("/app/qr"), center: true },
+    { href: "/app/reward", label: "Reward", icon: "gift", match: (p) => p.startsWith("/app/reward") || p.startsWith("/app/voucher") },
+    { href: "/app/profil", label: "Profil", icon: "user", match: (p) => p.startsWith("/app/profil") }
+  ];
+%>
+<!doctype html>
+<html lang="id">
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body class="shell-user">
+  <%- include('../partials/icons') %>
+  <a class="skip-link" href="#main">Lewati ke konten</a>
+
+  <div class="u-frame">
+    <header class="u-top">
+      <a href="/app" aria-label="EcoBin, ke beranda">
+        <img src="/img/logo/ecobin-horizontal-color.svg" alt="" width="112" height="27">
+      </a>
+      <a class="points-chip" href="/app/reward">
+        <svg class="icon" aria-hidden="true"><use href="#i-coin"/></svg>
+        <span><strong><%= fmt.number(currentUser.points) %></strong> poin</span>
+      </a>
+    </header>
+
+    <main class="u-main" id="main">
+      <%- include('../partials/flash') %>
+      <%- body %>
+    </main>
+
+    <nav class="tabbar" aria-label="Navigasi aplikasi">
+      <% tabs.forEach((tab) => { const active = tab.match(path); %>
+        <a class="tab-item<%= tab.center ? ' tab-item--center' : '' %>" href="<%= tab.href %>"<% if (active) { %> aria-current="page"<% } %>>
+          <span class="tab-icon"><svg class="icon" aria-hidden="true"><use href="#i-<%= tab.icon %>"/></svg></span>
+          <span class="tab-label"><%= tab.label %></span>
+        </a>
+      <% }) %>
+    </nav>
+  </div>
+</body>
+</html>

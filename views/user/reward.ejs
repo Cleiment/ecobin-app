@@ -1,0 +1,44 @@
+<div class="u-title-row">
+  <h1 class="u-title">Reward</h1>
+  <a class="link-more" href="/app/voucher">Voucher milikku</a>
+</div>
+<p class="u-lead">Tukarkan Eco Point dengan voucher belanja. Kode voucher langsung muncul di halaman Voucher Milikku.</p>
+
+<% if (!vouchers.length) { %>
+  <div class="empty">
+    <span class="empty-icon"><svg class="icon" aria-hidden="true"><use href="#i-gift"/></svg></span>
+    <p class="empty-title">Belum ada voucher</p>
+    <p>Voucher baru akan muncul di sini setelah ditambahkan pengelola.</p>
+  </div>
+<% } else { %>
+  <ul class="voucher-list">
+    <% vouchers.forEach((v) => {
+      const short = v.points_cost - currentUser.points;
+      const canRedeem = v.stock > 0 && short <= 0;
+    %>
+      <li class="voucher voucher--<%= v.retailer.toLowerCase() %>">
+        <div class="voucher-head">
+          <span class="retailer"><%= v.retailer %></span>
+          <span class="voucher-nominal"><%= fmt.rupiah(v.nominal) %></span>
+        </div>
+        <p class="voucher-name"><%= v.name %></p>
+        <div class="voucher-foot">
+          <div>
+            <p class="voucher-cost"><%= fmt.number(v.points_cost) %> poin</p>
+            <p class="voucher-stock">
+              <% if (v.stock > 0) { %>Sisa <%= fmt.number(v.stock) %><% } else { %>Stok habis<% } %>
+            </p>
+          </div>
+          <% if (canRedeem) { %>
+            <form method="post" action="/app/reward/<%= v.id %>/tukar"
+              data-confirm="Tukar <%= fmt.number(v.points_cost) %> Eco Point dengan <%= v.name %>?">
+              <button class="btn btn--primary btn--sm" type="submit">Tukar</button>
+            </form>
+          <% } else { %>
+            <span class="voucher-lock"><%= v.stock > 0 ? 'Kurang ' + fmt.number(short) + ' poin' : 'Tidak tersedia' %></span>
+          <% } %>
+        </div>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>

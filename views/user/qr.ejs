@@ -1,0 +1,19 @@
+<h1 class="u-title">QR Membership</h1>
+
+<section class="qr-card">
+  <div class="qr-image" role="img" aria-label="QR membership dengan kode <%= currentUser.member_code %>">
+    <%- svg %>
+  </div>
+  <p class="qr-code"><%= currentUser.member_code %></p>
+  <p class="qr-name"><%= currentUser.name %></p>
+</section>
+
+<p class="qr-instruction">Pilah sampahmu dulu, lalu scan QR ini di EcoBin sebelum setor.</p>
+
+<ol class="mini-steps">
+  <li><span><strong>Pilah</strong> sampah menjadi organik, anorganik, dan residu.</span></li>
+  <li><span><strong>Tunjukkan QR</strong> ke kamera di layar stasiun.</span></li>
+  <li><span><strong>Masukkan</strong> sampah ke lubang yang sesuai. Poin langsung masuk ke akunmu.</span></li>
+</ol>
+
+<p class="hint">Naikkan kecerahan layar HP supaya QR lebih mudah terbaca. Kamera tidak bisa membaca? Sebutkan kode di bawah QR ke petugas.</p>

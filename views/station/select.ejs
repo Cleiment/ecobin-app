@@ -1,0 +1,39 @@
+<header class="page-head">
+  <div>
+    <h1 class="page-title">Simulator Stasiun</h1>
+    <p class="page-lead">Pengganti Smart Waste Station untuk demo. Pilih unit yang ingin disimulasikan, lalu layar berubah menjadi mode kios.</p>
+  </div>
+</header>
+
+<div class="callout-info">
+  <svg class="icon" aria-hidden="true"><use href="#i-camera"/></svg>
+  <p>Kamera hanya bisa dipakai jika simulator dibuka di <strong>localhost</strong> pada laptop ini. Pengguna menunjukkan QR membership dari HP ke webcam. Kode member juga bisa diketik.</p>
+</div>
+
+<ul class="loc-grid">
+  <% locations.forEach((l) => { const fill = fmt.fill(l); const ready = l.status === 'aktif' && fill.pct < 100; %>
+    <li class="panel loc-card">
+      <div class="loc-head">
+        <span class="retailer"><%= l.retailer %></span>
+        <% if (l.status !== 'aktif') { %><span class="badge badge--soon">Segera hadir</span>
+        <% } else if (fill.pct >= 100) { %><span class="badge badge--danger">Penuh</span>
+        <% } else { %><span class="badge badge--ok">Siap</span><% } %>
+      </div>
+      <h2 class="loc-name"><%= l.name %></h2>
+      <p class="loc-address"><%= l.address %></p>
+      <% if (l.status === 'aktif') { %>
+        <div class="fill fill--<%= fill.tone %>">
+          <div class="fill-bar" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="<%= fill.bar %>" aria-label="Isi <%= l.name %>"><span style="width: <%= fill.bar %>%"></span></div>
+          <p class="fill-label"><%= fill.label %> · <%= fill.pct %>%</p>
+        </div>
+      <% } %>
+      <% if (ready) { %>
+        <a class="btn btn--primary btn--block" href="/admin/stasiun/<%= l.id %>">
+          <svg class="icon" aria-hidden="true"><use href="#i-monitor"/></svg> Mulai simulasi
+        </a>
+      <% } else if (l.status === 'aktif') { %>
+        <a class="btn btn--outline btn--block" href="/admin/lokasi">Kosongkan unit dulu</a>
+      <% } %>
+    </li>
+  <% }) %>
+</ul>

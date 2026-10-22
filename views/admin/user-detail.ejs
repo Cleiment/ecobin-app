@@ -1,0 +1,49 @@
+<a class="back-link" href="/admin/pengguna">
+  <svg class="icon" aria-hidden="true"><use href="#i-prev"/></svg> Pengguna
+</a>
+
+<header class="page-head">
+  <div class="profile-head">
+    <span class="avatar avatar--lg" aria-hidden="true"><%= fmt.initials(user.name) %></span>
+    <div>
+      <h1 class="page-title"><%= user.name %></h1>
+      <p class="page-lead"><%= user.email %> · <%= user.member_code %> · terdaftar <%= fmt.date(user.created_at) %></p>
+    </div>
+  </div>
+</header>
+
+<dl class="kpi-grid">
+  <div class="kpi"><dt>Saldo Eco Point</dt><dd><%= fmt.number(user.points) %></dd></div>
+  <div class="kpi"><dt>Sampah terpilah</dt><dd><%= fmt.kg(totals.kg) %></dd></div>
+  <div class="kpi"><dt>Setoran</dt><dd><%= fmt.number(totals.n) %></dd><p><%= fmt.number(totals.rejected || 0) %> ditolak</p></div>
+  <div class="kpi"><dt>Poin didapat</dt><dd><%= fmt.number(totals.points) %></dd></div>
+</dl>
+
+<section class="panel" aria-labelledby="ud-deposits">
+  <h2 class="panel-title" id="ud-deposits">Setoran terakhir</h2>
+  <%- include('_deposit-table', { deposits, showUser: false }) %>
+</section>
+
+<section class="panel" aria-labelledby="ud-vouchers">
+  <h2 class="panel-title" id="ud-vouchers">Voucher</h2>
+  <% if (!redemptions.length) { %>
+    <p class="panel-empty">Belum pernah menukar voucher.</p>
+  <% } else { %>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th scope="col">Ditukar</th><th scope="col">Kode</th><th scope="col">Voucher</th><th scope="col" class="num">Poin</th><th scope="col">Status</th></tr></thead>
+        <tbody>
+          <% redemptions.forEach((r) => { const s = fmt.redemptionStatus(r); %>
+            <tr>
+              <td class="nowrap"><%= fmt.dateTime(r.created_at) %></td>
+              <td class="nowrap code"><%= r.code %></td>
+              <td><%= r.voucher_name %></td>
+              <td class="num"><%= fmt.number(r.points_spent) %></td>
+              <td><span class="badge badge--<%= s.tone %>"><%= s.label %></span></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>

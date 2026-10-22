@@ -1,0 +1,88 @@
+<% const fill = fmt.fill(location); %>
+<div class="kiosk" data-kiosk>
+  <header class="k-top">
+    <img src="/img/logo/ecobin-horizontal-reversed.svg" alt="EcoBin" width="120" height="29">
+    <div class="k-unit">
+      <p class="k-unit-name"><%= location.name %></p>
+      <div class="k-meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="<%= fill.bar %>" aria-label="Isi unit" data-meter>
+        <span style="width: <%= fill.bar %>%"></span>
+      </div>
+      <p class="k-unit-fill" data-meter-label>Isi <%= fill.pct %>%</p>
+    </div>
+    <div class="k-actions">
+      <button class="k-icon-btn" type="button" data-fullscreen>Layar penuh</button>
+      <a class="k-icon-btn" href="/admin/stasiun">Keluar mode kios</a>
+    </div>
+  </header>
+
+  <main class="k-stage" id="main">
+    <!-- 1. Scan QR -->
+    <section class="k-screen" data-screen="scan" aria-labelledby="k-scan-title">
+      <h1 class="k-title" id="k-scan-title">Scan QR membership</h1>
+      <p class="k-lead">Pilah sampahmu dulu, lalu tunjukkan QR dari aplikasi EcoBin ke kamera.</p>
+      <div class="k-camera">
+        <video data-video playsinline muted aria-hidden="true"></video>
+        <div class="k-camera-frame" aria-hidden="true"></div>
+        <p class="k-camera-msg" data-camera-msg role="status">Menyalakan kamera…</p>
+      </div>
+      <form class="k-manual" data-manual>
+        <label for="k-code">Atau ketik kode member</label>
+        <div class="k-manual-row">
+          <input id="k-code" name="code" type="text" autocomplete="off" spellcheck="false" placeholder="ECO-XXXXXX" maxlength="10">
+          <button class="k-btn k-btn--primary" type="submit">Lanjut</button>
+        </div>
+        <p class="k-error" data-scan-error role="alert"></p>
+      </form>
+    </section>
+
+    <!-- 2. Pilih lubang -->
+    <section class="k-screen" data-screen="slot" aria-labelledby="k-slot-title" hidden>
+      <p class="k-member" data-member-line></p>
+      <h1 class="k-title" id="k-slot-title" tabindex="-1">Pilih lubang setor</h1>
+      <p class="k-lead">Masukkan sampah ke lubang yang sesuai kategorinya.</p>
+      <div class="k-slots" data-slots></div>
+      <button class="k-btn k-btn--ghost" type="button" data-action="done">Batal</button>
+    </section>
+
+    <!-- 3. Pilih barang -->
+    <section class="k-screen" data-screen="item" aria-labelledby="k-item-title" hidden>
+      <p class="k-member" data-slot-line></p>
+      <h1 class="k-title" id="k-item-title" tabindex="-1">Barang apa yang dimasukkan?</h1>
+      <p class="k-lead">Simulasi kamera AI: pilih barang yang sebenarnya dimasukkan ke lubang.</p>
+      <div class="k-items" data-items role="radiogroup" aria-labelledby="k-item-title"></div>
+      <div class="k-qty">
+        <span id="k-qty-label">Jumlah</span>
+        <div class="k-stepper" role="group" aria-labelledby="k-qty-label">
+          <button class="k-step" type="button" data-qty="-1"><span aria-hidden="true">−</span><span class="visually-hidden">Kurangi</span></button>
+          <output data-qty-value aria-live="polite">1</output>
+          <button class="k-step" type="button" data-qty="1"><span aria-hidden="true">+</span><span class="visually-hidden">Tambah</span></button>
+        </div>
+      </div>
+      <div class="k-row">
+        <button class="k-btn k-btn--ghost" type="button" data-action="back-slot">Ganti lubang</button>
+        <button class="k-btn k-btn--primary" type="button" data-action="submit" disabled>Masukkan sampah</button>
+      </div>
+      <p class="k-error" data-submit-error role="alert"></p>
+    </section>
+
+    <!-- 4. Memeriksa -->
+    <section class="k-screen" data-screen="checking" aria-live="polite" hidden>
+      <div class="k-spinner" aria-hidden="true"></div>
+      <h1 class="k-title">Memeriksa sampah…</h1>
+      <p class="k-lead">Kamera mengenali jenis sampah, load cell menimbang beratnya.</p>
+    </section>
+
+    <!-- 5. Hasil -->
+    <section class="k-screen" data-screen="result" aria-live="polite" hidden>
+      <div class="k-result" data-result></div>
+      <div class="k-row">
+        <button class="k-btn k-btn--ghost" type="button" data-action="done">Selesai</button>
+        <button class="k-btn k-btn--primary" type="button" data-action="again">Setor lagi</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script type="application/json" id="station-config"><%- JSON.stringify(config).replace(/</g, "\\u003c") %></script>
+<script src="/vendor/jsQR.js" defer></script>
+<script src="/js/station.js" defer></script>

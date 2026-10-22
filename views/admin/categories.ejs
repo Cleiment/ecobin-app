@@ -1,0 +1,70 @@
+<header class="page-head">
+  <div>
+    <h1 class="page-title">Kategori Sampah</h1>
+    <p class="page-lead">Atur kategori, nilai Eco Point per kg, dan contoh barang yang muncul di Simulator Stasiun.</p>
+  </div>
+</header>
+
+<section class="panel" aria-labelledby="new-cat">
+  <h2 class="panel-title" id="new-cat">Tambah kategori</h2>
+  <form class="form-inline" method="post" action="/admin/kategori">
+    <div class="field">
+      <label for="new-name">Nama</label>
+      <input id="new-name" name="name" type="text" required>
+    </div>
+    <div class="field field--sm">
+      <label for="new-ppk">Poin per kg</label>
+      <input id="new-ppk" name="points_per_kg" type="number" min="0" step="1" inputmode="numeric" required>
+    </div>
+    <div class="field field--xs">
+      <label for="new-color">Warna</label>
+      <input id="new-color" name="color" type="color" value="#0B766F">
+    </div>
+    <button class="btn btn--primary" type="submit"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg> Tambah</button>
+  </form>
+</section>
+
+<% categories.forEach((c) => { %>
+  <section class="panel cat-panel<%= c.active ? '' : ' is-inactive' %>" aria-labelledby="cat-<%= c.id %>">
+    <div class="panel-head">
+      <div class="cat-heading">
+        <span class="cat-swatch" style="--cat: <%= c.color %>" aria-hidden="true"></span>
+        <h2 class="panel-title" id="cat-<%= c.id %>"><%= c.name %></h2>
+        <% if (!c.active) { %><span class="badge badge--muted">Nonaktif</span><% } %>
+      </div>
+      <p class="cat-rate"><strong><%= fmt.number(c.points_per_kg) %></strong> poin/kg</p>
+    </div>
+    <p class="panel-meta">Dipakai di <%= fmt.number(c.used) %> setoran</p>
+
+    <details class="edit">
+      <summary>Ubah kategori</summary>
+      <form class="form-inline" method="post" action="/admin/kategori/<%= c.id %>">
+        <div class="field">
+          <label for="name-<%= c.id %>">Nama</label>
+          <input id="name-<%= c.id %>" name="name" type="text" value="<%= c.name %>" required>
+        </div>
+        <div class="field field--sm">
+          <label for="ppk-<%= c.id %>">Poin per kg</label>
+          <input id="ppk-<%= c.id %>" name="points_per_kg" type="number" min="0" step="1" value="<%= c.points_per_kg %>" required>
+        </div>
+        <div class="field field--xs">
+          <label for="color-<%= c.id %>">Warna</label>
+          <input id="color-<%= c.id %>" name="color" type="color" value="<%= c.color %>">
+        </div>
+        <label class="check"><input type="checkbox" name="active" value="1"<%= c.active ? ' checked' : '' %>> Aktif</label>
+        <button class="btn btn--primary" type="submit">Simpan</button>
+      </form>
+      <form method="post" action="/admin/kategori/<%= c.id %>/hapus" data-confirm="Hapus kategori <%= c.name %>?">
+        <button class="btn btn--danger-ghost btn--sm" type="submit"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg> Hapus kategori</button>
+      </form>
+    </details>
+
+    <%- include('_items', { items: c.items, categoryId: c.id, label: c.name }) %>
+  </section>
+<% }) %>
+
+<section class="panel" aria-labelledby="mixed-title">
+  <h2 class="panel-title" id="mixed-title">Barang campuran</h2>
+  <p class="panel-meta">Barang di daftar ini selalu ditolak di simulator dengan pesan "Sampah tercampur".</p>
+  <%- include('_items', { items: mixed, categoryId: '', label: 'campuran' }) %>
+</section>

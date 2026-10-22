@@ -1,0 +1,41 @@
+<% if (!deposits.length) { %>
+  <p class="panel-empty">Belum ada setoran yang cocok.</p>
+<% } else { %>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Waktu</th>
+          <% if (showUser) { %><th scope="col">Pengguna</th><% } %>
+          <th scope="col">Lokasi</th>
+          <th scope="col">Kategori</th>
+          <th scope="col">Barang</th>
+          <th scope="col" class="num">Berat</th>
+          <th scope="col" class="num">Poin</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% deposits.forEach((d) => { %>
+          <tr>
+            <td class="nowrap"><%= fmt.dateTime(d.created_at) %></td>
+            <% if (showUser) { %><td><a href="/admin/pengguna/<%= d.user_id %>"><%= d.user_name %></a></td><% } %>
+            <td><%= d.location_name %></td>
+            <td><span class="cat-dot" style="--cat: <%= d.category_color %>" aria-hidden="true"></span><%= d.category_name %></td>
+            <td><%= d.item_name %><% if (d.status === 'diterima' && d.quantity > 1) { %> × <%= d.quantity %><% } %></td>
+            <td class="num nowrap"><%= d.status === 'diterima' ? fmt.kg(d.weight_kg) : '–' %></td>
+            <td class="num"><%= d.status === 'diterima' ? fmt.number(d.points) : '0' %></td>
+            <td>
+              <% if (d.status === 'diterima') { %>
+                <span class="badge badge--ok">Diterima</span>
+              <% } else { %>
+                <span class="badge badge--danger" title="<%= d.reason %>">Ditolak</span>
+                <p class="table-note"><%= d.reason %></p>
+              <% } %>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>

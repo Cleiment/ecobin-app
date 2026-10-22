@@ -1,0 +1,32 @@
+<h1 class="u-title">Profil</h1>
+
+<section class="profile-card">
+  <span class="avatar avatar--lg" aria-hidden="true"><%= fmt.initials(currentUser.name) %></span>
+  <div>
+    <p class="profile-name"><%= currentUser.name %></p>
+    <p class="profile-meta"><%= currentUser.email %></p>
+    <p class="profile-meta">Kode member <strong><%= currentUser.member_code %></strong></p>
+  </div>
+</section>
+
+<form class="form-stack u-section" method="post" action="/app/profil" novalidate>
+  <div class="field">
+    <label for="name">Nama</label>
+    <input id="name" name="name" type="text" autocomplete="name" value="<%= values.name %>" required
+      <% if (errors.name) { %>aria-invalid="true" aria-describedby="name-error"<% } %>>
+    <% if (errors.name) { %><p class="field-error" id="name-error"><%= errors.name %></p><% } %>
+  </div>
+  <button class="btn btn--outline" type="submit">Simpan nama</button>
+</form>
+
+<nav class="menu-list u-section" aria-label="Menu akun">
+  <a href="/app/voucher"><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg> Voucher Milikku <svg class="icon menu-chevron" aria-hidden="true"><use href="#i-next"/></svg></a>
+  <a href="/app/lokasi"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg> Lokasi EcoBin <svg class="icon menu-chevron" aria-hidden="true"><use href="#i-next"/></svg></a>
+  <a href="/app/riwayat"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg> Riwayat Setoran <svg class="icon menu-chevron" aria-hidden="true"><use href="#i-next"/></svg></a>
+</nav>
+
+<form class="u-section" method="post" action="/keluar">
+  <button class="btn btn--ghost btn--block" type="submit">
+    <svg class="icon" aria-hidden="true"><use href="#i-logout"/></svg> Keluar
+  </button>
+</form>

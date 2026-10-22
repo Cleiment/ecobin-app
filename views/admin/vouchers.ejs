@@ -1,0 +1,86 @@
+<header class="page-head">
+  <div>
+    <h1 class="page-title">Voucher</h1>
+    <p class="page-lead">Atur voucher yang bisa ditukar pengguna dengan Eco Point.</p>
+  </div>
+</header>
+
+<section class="panel" aria-labelledby="new-voucher">
+  <h2 class="panel-title" id="new-voucher">Tambah voucher</h2>
+  <form class="form-inline" method="post" action="/admin/voucher">
+    <div class="field field--sm">
+      <label for="v-retailer">Mitra</label>
+      <select id="v-retailer" name="retailer" required>
+        <% retailers.forEach((r) => { %><option><%= r %></option><% }) %>
+      </select>
+    </div>
+    <div class="field">
+      <label for="v-name">Nama voucher</label>
+      <input id="v-name" name="name" type="text" placeholder="mis. Voucher Belanja Indomaret Rp50.000" required>
+    </div>
+    <div class="field field--sm">
+      <label for="v-nominal">Nominal (Rp)</label>
+      <input id="v-nominal" name="nominal" type="number" min="1" step="1" required>
+    </div>
+    <div class="field field--sm">
+      <label for="v-cost">Harga poin</label>
+      <input id="v-cost" name="points_cost" type="number" min="1" step="1" required>
+    </div>
+    <div class="field field--xs">
+      <label for="v-stock">Stok</label>
+      <input id="v-stock" name="stock" type="number" min="0" step="1" required>
+    </div>
+    <button class="btn btn--primary" type="submit"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg> Tambah</button>
+  </form>
+</section>
+
+<section class="panel" aria-labelledby="voucher-list">
+  <h2 class="panel-title" id="voucher-list">Daftar voucher</h2>
+  <ul class="record-list">
+    <% vouchers.forEach((v) => { %>
+      <li class="record<%= v.active ? '' : ' is-inactive' %>">
+        <div class="record-main">
+          <div class="record-title">
+            <span class="retailer"><%= v.retailer %></span>
+            <strong><%= v.name %></strong>
+            <% if (!v.active) { %><span class="badge badge--muted">Nonaktif</span><% } %>
+            <% if (v.active && v.stock === 0) { %><span class="badge badge--danger">Stok habis</span><% } %>
+          </div>
+          <p class="record-meta"><%= fmt.rupiah(v.nominal) %> · <%= fmt.number(v.points_cost) %> poin · stok <%= fmt.number(v.stock) %> · ditukar <%= fmt.number(v.redeemed) %>×</p>
+        </div>
+        <details class="edit">
+          <summary>Ubah</summary>
+          <form class="form-inline" method="post" action="/admin/voucher/<%= v.id %>">
+            <div class="field field--sm">
+              <label for="r-<%= v.id %>">Mitra</label>
+              <select id="r-<%= v.id %>" name="retailer">
+                <% retailers.forEach((r) => { %><option<%= r === v.retailer ? ' selected' : '' %>><%= r %></option><% }) %>
+              </select>
+            </div>
+            <div class="field">
+              <label for="n-<%= v.id %>">Nama voucher</label>
+              <input id="n-<%= v.id %>" name="name" type="text" value="<%= v.name %>" required>
+            </div>
+            <div class="field field--sm">
+              <label for="nom-<%= v.id %>">Nominal (Rp)</label>
+              <input id="nom-<%= v.id %>" name="nominal" type="number" min="1" step="1" value="<%= v.nominal %>" required>
+            </div>
+            <div class="field field--sm">
+              <label for="c-<%= v.id %>">Harga poin</label>
+              <input id="c-<%= v.id %>" name="points_cost" type="number" min="1" step="1" value="<%= v.points_cost %>" required>
+            </div>
+            <div class="field field--xs">
+              <label for="s-<%= v.id %>">Stok</label>
+              <input id="s-<%= v.id %>" name="stock" type="number" min="0" step="1" value="<%= v.stock %>" required>
+            </div>
+            <label class="check"><input type="checkbox" name="active" value="1"<%= v.active ? ' checked' : '' %>> Aktif</label>
+            <button class="btn btn--primary" type="submit">Simpan</button>
+          </form>
+          <form method="post" action="/admin/voucher/<%= v.id %>/hapus" data-confirm="Hapus <%= v.name %>?">
+            <button class="btn btn--danger-ghost btn--sm" type="submit"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg> Hapus voucher</button>
+          </form>
+        </details>
+      </li>
+    <% }) %>
+  </ul>
+</section>
