@@ -15,9 +15,9 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.disable("x-powered-by");
 
-// Tanpa cache panjang supaya perubahan CSS/JS langsung terlihat saat pengembangan
+// Lokal: disajikan Express. Di Vercel: folder public/ disajikan langsung oleh CDN.
+// Tanpa cache panjang supaya perubahan CSS/JS langsung terlihat saat pengembangan.
 app.use(express.static(path.join(__dirname, "public")));
-app.get("/vendor/jsQR.js", (req, res) => res.sendFile(require.resolve("jsqr/dist/jsQR.js")));
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());

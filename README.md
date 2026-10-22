@@ -43,6 +43,21 @@ Akun demo khusus prototipe lokal, ditulis di [db/seed.js](db/seed.js):
 
 Kamera hanya bisa dipakai di `localhost` atau HTTPS, jadi simulator dijalankan di laptop yang menjalankan server.
 
+## Demo di Vercel
+
+Aplikasi bisa di-deploy ke Vercel tanpa konfigurasi tambahan (Express terdeteksi otomatis dari `server.js`).
+
+| Pengaturan | Nilai |
+|---|---|
+| Framework Preset | Express |
+| Root Directory | kosong (root repo) |
+| Node.js Version | 24.x (sesuai `engines` di `package.json`) |
+| Build / Install Command | default |
+
+Di Vercel, database otomatis ditaruh di `/tmp/ecobin.db` dan diisi data demo saat server mulai. **Data ini tidak permanen**: setoran, akun baru, dan voucher hasil demo bisa kembali ke data awal saat server Vercel dimulai ulang atau saat deploy baru. Jika Vercel menjalankan beberapa salinan server sekaligus, masing-masing punya database sendiri, jadi login bisa tiba-tiba terputus.
+
+Karena Vercel memakai HTTPS, kamera HP juga bisa dipakai untuk simulator.
+
 ## Struktur
 
 ```

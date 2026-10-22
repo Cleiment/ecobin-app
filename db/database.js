@@ -2,7 +2,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { DatabaseSync } = require("node:sqlite");
 
-const DB_PATH = process.env.ECOBIN_DB || path.join(__dirname, "..", "ecobin.db");
+// Di Vercel folder proyek hanya bisa dibaca, jadi database ditaruh di /tmp.
+// Data di /tmp tidak permanen: kembali ke data awal saat server Vercel dimulai ulang.
+const DB_PATH = process.env.ECOBIN_DB
+  || (process.env.VERCEL ? "/tmp/ecobin.db" : path.join(__dirname, "..", "ecobin.db"));
 
 let db;
 

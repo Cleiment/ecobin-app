@@ -10,7 +10,7 @@
     "reset-db": "node --disable-warning=ExperimentalWarning db/seed.js --reset"
   },
   "engines": {
-    "node": ">=22.13"
+    "node": "24.x"
   },
   "dependencies": {
     "ejs": "^7.0.2",
