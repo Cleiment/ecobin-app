@@ -6,7 +6,7 @@ const { fmt } = require("../lib/format");
 const router = express.Router();
 router.use(requireAdmin);
 
-const RETAILERS = ["Indomaret", "Alfamart"];
+const RETAILERS = ["Indomaret"];
 const HEX_COLOR = /^#[0-9a-f]{6}$/i;
 
 const text = (value) => String(value ?? "").trim();
@@ -147,7 +147,7 @@ function voucherInput(body) {
 }
 function voucherError(v) {
   return firstError([
-    [RETAILERS.includes(v.retailer), "Pilih mitra Indomaret atau Alfamart."],
+    [RETAILERS.includes(v.retailer), "Mitra voucher harus Indomaret."],
     [v.name.length >= 3, "Nama voucher minimal 3 huruf."],
     [v.nominal > 0, "Nominal harus angka bulat lebih dari 0."],
     [v.cost > 0, "Harga poin harus angka bulat lebih dari 0."],
@@ -199,7 +199,7 @@ function locationInput(body) {
 }
 function locationError(l) {
   return firstError([
-    [RETAILERS.includes(l.retailer), "Pilih jaringan gerai Indomaret atau Alfamart."],
+    [RETAILERS.includes(l.retailer), "Jaringan gerai harus Indomaret."],
     [l.name.length >= 3, "Nama gerai minimal 3 huruf."],
     [l.address.length >= 5, "Isi alamat gerai."],
     [["aktif", "segera"].includes(l.status), "Pilih status Aktif atau Segera hadir."],

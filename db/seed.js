@@ -56,22 +56,19 @@ function seed(db) {
     // Lokasi (sama dengan Company Profile). Ahmad Yani sengaja hampir penuh untuk demo.
     const locations = [
       ["Indomaret", "Indomaret Ahmad Yani", "Jl. Ahmad Yani, Pontianak Selatan", "aktif", 150, 128.4],
-      ["Alfamart", "Alfamart Gajah Mada", "Jl. Gajah Mada, Pontianak Kota", "aktif", 150, 62.7],
       ["Indomaret", "Indomaret Reformasi", "Jl. Reformasi, Pontianak Tenggara", "aktif", 120, 41.2],
-      ["Alfamart", "Alfamart Tanjungpura", "Jl. Tanjungpura, Pontianak Timur", "aktif", 120, 18.9],
-      ["Indomaret", "Indomaret Prof. M. Yamin", "Jl. Prof. M. Yamin, Pontianak Kota", "segera", 150, 0],
-      ["Alfamart", "Alfamart Khatulistiwa", "Jl. Khatulistiwa, Pontianak Utara", "segera", 120, 0]
+      ["Indomaret", "Indomaret Prof. M. Yamin", "Jl. Prof. M. Yamin, Pontianak Kota", "segera", 150, 0]
     ];
-    const locIds = locations.map(([retailer, name, address, status, cap, cur]) =>
-      insert("INSERT INTO locations (retailer, name, address, status, capacity_kg, current_kg) VALUES (?, ?, ?, ?, ?, ?)", retailer, name, address, status, cap, cur));
-    const activeLocIds = locIds.slice(0, 4);
+    const activeLocIds = [];
+    for (const [retailer, name, address, status, cap, cur] of locations) {
+      const id = insert("INSERT INTO locations (retailer, name, address, status, capacity_kg, current_kg) VALUES (?, ?, ?, ?, ?, ?)", retailer, name, address, status, cap, cur);
+      if (status === "aktif") activeLocIds.push(id);
+    }
 
     // Voucher
     const vouchers = [
       ["Indomaret", "Voucher Belanja Indomaret Rp10.000", 10000, 500, 50],
-      ["Indomaret", "Voucher Belanja Indomaret Rp25.000", 25000, 1200, 20],
-      ["Alfamart", "Voucher Belanja Alfamart Rp10.000", 10000, 500, 50],
-      ["Alfamart", "Voucher Belanja Alfamart Rp25.000", 25000, 1200, 20]
+      ["Indomaret", "Voucher Belanja Indomaret Rp25.000", 25000, 1200, 20]
     ];
     const voucherIds = vouchers.map((v) =>
       insert("INSERT INTO vouchers (retailer, name, nominal, points_cost, stock) VALUES (?, ?, ?, ?, ?)", ...v));

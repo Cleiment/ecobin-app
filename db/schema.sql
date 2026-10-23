@@ -37,7 +37,7 @@ CREATE TABLE category_items (
 
 CREATE TABLE locations (
   id          INTEGER PRIMARY KEY,
-  retailer    TEXT    NOT NULL CHECK (retailer IN ('Indomaret', 'Alfamart')),
+  retailer    TEXT    NOT NULL CHECK (retailer IN ('Indomaret')),
   name        TEXT    NOT NULL,
   address     TEXT    NOT NULL,
   status      TEXT    NOT NULL DEFAULT 'aktif' CHECK (status IN ('aktif', 'segera')),
@@ -69,7 +69,7 @@ CREATE TABLE deposits (
 
 CREATE TABLE vouchers (
   id          INTEGER PRIMARY KEY,
-  retailer    TEXT    NOT NULL CHECK (retailer IN ('Indomaret', 'Alfamart')),
+  retailer    TEXT    NOT NULL CHECK (retailer IN ('Indomaret')),
   name        TEXT    NOT NULL,
   nominal     INTEGER NOT NULL CHECK (nominal > 0),
   points_cost INTEGER NOT NULL CHECK (points_cost > 0),

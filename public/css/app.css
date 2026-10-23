@@ -251,7 +251,6 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .voucher, .owned, .location { padding: 1rem 1.125rem; border-radius: var(--radius); background: var(--white); border: 1px solid var(--line); }
 .voucher { position: relative; overflow: hidden; }
 .voucher::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 6px; background: var(--teal); }
-.voucher--alfamart::before { background: var(--leaf); }
 .voucher-head, .owned-head, .location-head { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
 .voucher-nominal { font-size: 1.25rem; font-weight: 800; }
 .voucher-name { margin-top: .375rem; font-weight: 600; color: var(--ink-soft); }
