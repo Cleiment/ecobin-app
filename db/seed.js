@@ -53,11 +53,22 @@ function seed(db) {
     insert("INSERT INTO category_items (category_id, name, min_kg, max_kg, is_mixed) VALUES (NULL, ?, ?, ?, 1)", "Campuran botol dan tisu", 0.05, 0.2);
     insert("INSERT INTO category_items (category_id, name, min_kg, max_kg, is_mixed) VALUES (NULL, ?, ?, ?, 1)", "Kantong sampah tercampur", 0.3, 1.5);
 
-    // Lokasi (sama dengan Company Profile). Ahmad Yani sengaja hampir penuh untuk demo.
+    // Lokasi (sama dengan Company Profile): 9 aktif, 4 segera hadir di Kota Pontianak dan Kubu Raya.
+    // Ahmad Yani dan Imam Bonjol sengaja hampir penuh untuk demo dashboard.
     const locations = [
       ["Indomaret", "Indomaret Ahmad Yani", "Jl. Ahmad Yani, Pontianak Selatan", "aktif", 150, 128.4],
       ["Indomaret", "Indomaret Reformasi", "Jl. Reformasi, Pontianak Tenggara", "aktif", 120, 41.2],
-      ["Indomaret", "Indomaret Prof. M. Yamin", "Jl. Prof. M. Yamin, Pontianak Kota", "segera", 150, 0]
+      ["Indomaret", "Indomaret Prof. M. Yamin", "Jl. Prof. M. Yamin, Pontianak Kota", "aktif", 150, 62.7],
+      ["Indomaret", "Indomaret Gajah Mada", "Jl. Gajah Mada, Pontianak Selatan", "aktif", 150, 18.9],
+      ["Indomaret", "Indomaret Imam Bonjol", "Jl. Imam Bonjol, Pontianak Selatan", "aktif", 120, 104.5],
+      ["Indomaret", "Indomaret Kom. Yos Sudarso", "Jl. Kom. Yos Sudarso, Pontianak Barat", "aktif", 120, 33.6],
+      ["Indomaret", "Indomaret Khatulistiwa", "Jl. Khatulistiwa, Pontianak Utara", "aktif", 120, 55.0],
+      ["Indomaret", "Indomaret Tanjung Raya 2", "Jl. Tanjung Raya 2, Pontianak Timur", "segera", 120, 0],
+      ["Indomaret", "Indomaret Parit Haji Husin 2", "Jl. Parit Haji Husin 2, Pontianak Tenggara", "segera", 120, 0],
+      ["Indomaret", "Indomaret Sungai Raya Dalam", "Jl. Sungai Raya Dalam, Sungai Raya, Kubu Raya", "aktif", 150, 74.3],
+      ["Indomaret", "Indomaret Adisucipto", "Jl. Adisucipto, Sungai Raya, Kubu Raya", "aktif", 150, 26.8],
+      ["Indomaret", "Indomaret Trans Kalimantan", "Jl. Trans Kalimantan, Sungai Ambawang, Kubu Raya", "segera", 150, 0],
+      ["Indomaret", "Indomaret Sungai Kakap", "Jl. Raya Sungai Kakap, Sungai Kakap, Kubu Raya", "segera", 120, 0]
     ];
     const activeLocIds = [];
     for (const [retailer, name, address, status, cap, cur] of locations) {
